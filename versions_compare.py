@@ -1,8 +1,9 @@
-import pytest
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
 import datetime
-import time
 import assests
 import calculator
 import configurations
@@ -22,15 +23,16 @@ def initialize_chrome_instance(url):
 
 def take_element_screenshot(element_path, version, timestamp):
     driver = initialize_chrome_instance(element_path)
-    time.sleep(5);
-    image = driver.find_element_by_tag_name(configurations.SELECTOR_TAG)
+    wait = WebDriverWait(driver, configurations.WAIT_TIMEOUT)
+    image = wait.until(EC.presence_of_element_located((By.TAG_NAME, configurations.SELECTOR_TAG)))
     image.screenshot('products/' + version + '_' + timestamp + configurations.SCREENSHOTS_FORMAT)
     driver.close()
     return 'products/' + version + '_' + timestamp + configurations.SCREENSHOTS_FORMAT
 
 
 def compare_versions(main_version, ref_version):
-    if main_version.SignalPixels == ref_version.SignalPixels and main_version.BackgroundPixels == ref_version.BackgroundPixels:
+    if main_version.SignalPixels == ref_version.SignalPixels and \
+            main_version.BackgroundPixels == ref_version.BackgroundPixels:
         return True
     else:
         return False
