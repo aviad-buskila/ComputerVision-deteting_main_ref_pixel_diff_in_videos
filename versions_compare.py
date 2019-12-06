@@ -9,10 +9,12 @@ import calculator
 import configurations
 
 
+# document timestamp for image mark and debug abilities
 def prettify_now():
     return datetime.datetime.now().strftime(configurations.TIMESTAMP_FORMAT)
 
 
+# Initializing chrome instance, returns driver object
 def initialize_chrome_instance(url):
     options = Options()
     # options.add_argument('--headless')
@@ -21,6 +23,8 @@ def initialize_chrome_instance(url):
     return driver
 
 
+# Navigate to proper endpoint, retrieve the element, take its screenshot and store it in products directory.
+# Function returns screenshot file path
 def take_element_screenshot(element_path, version, timestamp):
     driver = initialize_chrome_instance(element_path)
     wait = WebDriverWait(driver, configurations.WAIT_TIMEOUT)
@@ -30,6 +34,7 @@ def take_element_screenshot(element_path, version, timestamp):
     return 'products/' + version + '_' + timestamp + configurations.SCREENSHOTS_FORMAT
 
 
+# Compare image_value objects (pixels count for background and signal)
 def compare_versions(main_version, ref_version):
     if main_version.SignalPixels == ref_version.SignalPixels and \
             main_version.BackgroundPixels == ref_version.BackgroundPixels:
